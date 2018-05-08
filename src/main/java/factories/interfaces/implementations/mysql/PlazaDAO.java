@@ -1,6 +1,7 @@
 package factories.interfaces.implementations.mysql;
 
 import conexiones.Conexion;
+import factories.interfaces.CiudadDAO;
 import modelos.Ciudad;
 import modelos.Plaza;
 
@@ -10,6 +11,22 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class PlazaDAO implements factories.interfaces.PlazaDAO {
+
+    private factories.interfaces.CiudadDAO ciudadDAO;
+
+    public CiudadDAO getCiudadDAO() {
+        return ciudadDAO;
+    }
+
+    public void setCiudadDAO(CiudadDAO ciudadDAO) {
+        this.ciudadDAO = ciudadDAO;
+    }
+
+    public PlazaDAO(CiudadDAO ciudadDAO) {
+
+        this.ciudadDAO = ciudadDAO;
+    }
+
     @Override
     public void create(Plaza obj) {
         try {
@@ -90,7 +107,7 @@ public class PlazaDAO implements factories.interfaces.PlazaDAO {
         Integer i = 1;
         Plaza plaza = null;
         try {
-            plaza = new Plaza(rs.getLong(i++), rs.getString(i++), (Ciudad) rs.getObject(i));
+            plaza = new Plaza(rs.getLong(i++), rs.getString(i++), ciudadDAO.read(rs.getLong(i)));
         } catch (SQLException e) {
             e.printStackTrace();
         }

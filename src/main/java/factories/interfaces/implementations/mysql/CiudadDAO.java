@@ -6,10 +6,12 @@ import modelos.Ciudad;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CiudadDAO  implements factories.interfaces.CiudadDAO {
+
 
 
     @Override
@@ -49,8 +51,8 @@ public class CiudadDAO  implements factories.interfaces.CiudadDAO {
         List<Ciudad> ciudades = null;
         try {
             Conexion conexion = Conexion.getInstance();
-            PreparedStatement ps = conexion.getConnection().prepareStatement(String.format("%s %s",Ciudad.Q_ALL, criterio));
-            ResultSet rs = ps.executeQuery();
+            Statement st = conexion.getConnection().createStatement();
+            ResultSet rs = st.executeQuery(String.format("%s %s", Ciudad.Q_ALL, criterio));
             if (rs.next()){
                 ciudades.add(makeCiudad(rs));
             }

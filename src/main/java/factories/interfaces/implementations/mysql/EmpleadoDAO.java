@@ -1,6 +1,8 @@
 package factories.interfaces.implementations.mysql;
 
 import conexiones.Conexion;
+import factories.interfaces.CiudadDAO;
+import factories.interfaces.PlazaDAO;
 import modelos.Empleado;
 import modelos.Plaza;
 
@@ -10,6 +12,31 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class EmpleadoDAO implements factories.interfaces.EmpleadoDAO {
+
+    private factories.interfaces.PlazaDAO plazaDAO;
+    private factories.interfaces.EmpleadoDAO empleadoDAO;
+
+    public EmpleadoDAO(PlazaDAO plazaDAO, factories.interfaces.EmpleadoDAO empleadoDAO) {
+        this.plazaDAO = plazaDAO;
+        this.empleadoDAO = empleadoDAO;
+    }
+
+    public PlazaDAO getPlazaDAO() {
+        return plazaDAO;
+    }
+
+    public void setPlazaDAO(PlazaDAO plazaDAO) {
+        this.plazaDAO = plazaDAO;
+    }
+
+    public factories.interfaces.EmpleadoDAO getEmpleadoDAO() {
+        return empleadoDAO;
+    }
+
+    public void setEmpleadoDAO(factories.interfaces.EmpleadoDAO empleadoDAO) {
+        this.empleadoDAO = empleadoDAO;
+    }
+
     @Override
     public void create(Empleado obj) {
         try {
@@ -97,7 +124,7 @@ public class EmpleadoDAO implements factories.interfaces.EmpleadoDAO {
         Integer i = 1;
         Empleado empleado = null;
         try {
-            empleado = new Empleado(rs.getLong(i++), rs.getString(i++), rs.getString(i++),rs.getString(i++), (Empleado) rs.getObject(i++), (Plaza) rs.getObject(i));
+            empleado = new Empleado(rs.getLong(i++), rs.getString(i++), rs.getString(i++),rs.getString(i++), empleadoDAO.read(rs.getLong(i++)) , plazaDAO.read(rs.getLong(i)));
         } catch (SQLException e) {
             e.printStackTrace();
         }
